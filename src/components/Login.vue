@@ -73,7 +73,7 @@ export default {
     },
     login() {
       this.$refs.formRef.validate(async (valid) => {
-        if (!valid) ruturn;
+        if (!valid) return;
         const { data: res } = await this.$http.post("login", this.loginForm);
         if (res.meta.status !== 200) {
           return this.$message.error("登录失败,请核对用户信息");
@@ -92,12 +92,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.login-container{
+.login-container {
   background-color: rgb(129, 17, 204);
   height: 100%;
 }
 
-.login-box{
+.login-box {
   width: 450px;
   height: 300px;
   background-color: #fff;

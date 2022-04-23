@@ -176,7 +176,7 @@ export default {
       },
       manyTableData: [],
       onlyTableData: [],
-      uploadURL: "http://127.0.0.1:8888/api/private/v1/upload",
+      uploadURL: "http://175.27.228.178:3434/api/private/v1/upload",
       // 图片上传组件的headers请求头对象
       headerObj: {
         Authorization: window.sessionStorage.getItem("token"),

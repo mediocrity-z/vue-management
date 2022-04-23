@@ -16,25 +16,25 @@ import 'quill/dist/quill.snow.css'
 Vue.use(VueQuillEditor)
 
 // import axios from 'axios'
-axios.defaults.baseURL='http://47.107.70.230:8889/api/private/v1/'
+axios.defaults.baseURL = 'http://175.27.228.178:3434/api/private/v1/'
 
 import TreeTable from 'vue-table-with-tree-grid'
-Vue.component('tree-table',TreeTable)
+Vue.component('tree-table', TreeTable)
 
 
 
 //axios请求拦截器，给请求头对象添加token验证的Authorization字段，以保证每次拥有获取菜单里的数据的权限。
 //大概意思是用户登录之后的会将登录的token令牌赋值给Authorization对象，这个对象里面有token之后就能有权限查看和修改
 //菜单里的数据
-axios.interceptors.request.use(config=>{
-  config.headers.Authorization=window.sessionStorage.getItem('token');
+axios.interceptors.request.use(config => {
+  config.headers.Authorization = window.sessionStorage.getItem('token');
   return config;
 })
-Vue.prototype.$http=axios
+Vue.prototype.$http = axios
 
 // 全局过滤器 参数1名称 参数2要过滤的值的方法
 Vue.filter('dataFormat', function (originVal) {
-  const dt = new Date(originVal*1000 )
+  const dt = new Date(originVal * 1000)
   // ES7 padStart() String的方法，参数1字符串个数，参数2不足时候用其补全
   const y = dt.getFullYear()
   const m = (dt.getMonth() + 1 + '').padStart(2, '0')
