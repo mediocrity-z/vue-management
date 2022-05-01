@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import { userLogin } from "../api/login/login";
 export default {
   data() {
     return {
@@ -74,7 +75,7 @@ export default {
     login() {
       this.$refs.formRef.validate(async (valid) => {
         if (!valid) return;
-        const { data: res } = await this.$http.post("login", this.loginForm);
+        const { data: res } = await userLogin(this.loginForm);
         if (res.meta.status !== 200) {
           return this.$message.error("登录失败,请核对用户信息");
         }

@@ -112,7 +112,7 @@
           >
           <!-- 静态属性表格 -->
           <el-table :data="onlyTableData" border stripe>
-             <!-- 展开行 -->
+            <!-- 展开行 -->
             <el-table-column type="expand">
               <template v-slot:default="scope">
                 <!-- 循环渲染tag标签 -->
@@ -221,6 +221,7 @@
   </div>
 </template>
 <script>
+import { getCateList } from "../../api/goods/params";
 export default {
   created() {
     this.getCateList();
@@ -271,7 +272,7 @@ export default {
   methods: {
     //获取所有商品分类列表数据
     async getCateList() {
-      const { data: res } = await this.$http.get("categories");
+      const { data: res } = await getCateList();
       if (res.meta.status !== 200)
         return this.$message.error("获取商品分类列表数据失败!");
       this.cateList = res.data;
@@ -340,9 +341,7 @@ export default {
     },
     //查询当前参数的信息
     async showEditDialog(attr_id) {
-      const {
-        data: res,
-      } = await this.$http.get(
+      const { data: res } = await this.$http.get(
         `categories/${this.cateId}/attributes/${attr_id}`,
         { params: { attr_sel: this.activeName } }
       );
