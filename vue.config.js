@@ -1,4 +1,3 @@
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 module.exports = {
   publicPath: "./",
   assetsDir: "static",
@@ -8,9 +7,6 @@ module.exports = {
     disableHostCheck: true,
     host: 'localhost'
   },
-  plugins: [
-    new UglifyJSPlugin()
-  ],
   chainWebpack: config => {
 
     config.when(process.env.NODE_ENV === 'production', config => {

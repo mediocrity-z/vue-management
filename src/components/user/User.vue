@@ -101,12 +101,14 @@
       >
       </el-pagination>
     </el-card>
+
     <!-- 添加用户的对话框 -->
-    <el-dialog
-      title="添加用户"
-      :visible.sync="addVisible"
+    <manage-dialog
+      :title="titleForm.add"
+      :visible="addVisible"
       width="35%"
-      @close="addDialogClosed"
+      @yes="addUser"
+      @no="addDialogClosed"
     >
       <!-- 内容主体区域 -->
       <el-form
@@ -128,18 +130,14 @@
           <el-input v-model="addForm.mobile"></el-input>
         </el-form-item>
       </el-form>
-      <!-- 底部区域 -->
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="addUser">确 定</el-button>
-        <el-button @click="addVisible = false">取 消</el-button>
-      </span>
-    </el-dialog>
+    </manage-dialog>
     <!-- 修改用户的对话框 -->
-    <el-dialog
-      title="提示"
-      :visible.sync="editDialogVisible"
+    <manage-dialog
+      :title="titleForm.edit"
+      :visible="editDialogVisible"
       width="35%"
-      @close="editDialogClosed"
+      @no="editDialogClosed"
+      @yes="editUserInfo"
     >
       <el-form
         ref="editFormRef"
@@ -157,17 +155,14 @@
           <el-input v-model="editForm.mobile"></el-input>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="editUserInfo">确 定</el-button>
-        <el-button @click="editDialogVisible = false">取 消</el-button>
-      </span>
-    </el-dialog>
+    </manage-dialog>
     <!-- 分配角色的对话框 -->
-    <el-dialog
-      title="分配角色"
-      :visible.sync="RoleDialogVisible"
+    <manage-dialog
+      :title="titleForm.distribute"
+      :visible="RoleDialogVisible"
       width="35%"
-      @close="RoleDialogClosed"
+      @yes="saveRoleInfo"
+      @no="RoleDialogClosed"
     >
       <div>
         <p>当前用户: {{ userInfo.username }}</p>
@@ -185,12 +180,7 @@
           </el-select>
         </p>
       </div>
-      <!-- 底部区域 -->
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
-        <el-button @click="RoleDialogVisible = false">取 消</el-button>
-      </span>
-    </el-dialog>
+    </manage-dialog>
   </div>
 </template>
 <script>
@@ -203,17 +193,14 @@ import {
   removeUserById,
   setRole,
 } from "../../api/user/user";
+import manageDialog from "../../components/manage-dialog.vue";
 export default {
   name: "User",
+  components: {
+    manageDialog,
+  },
   created() {
-    // this.userList();
-    getUserList(this.queryInfo).then((res) => console.log(res));
-    setTimeout(() => {
-      getUserList(this.queryInfo).then((res) => console.log(res));
-    }, 100);
-    setTimeout(() => {
-      getUserList(this.queryInfo).then((res) => console.log(res));
-    }, 200);
+    this.userList();
   },
   data() {
     //验证邮箱的规则
@@ -238,6 +225,11 @@ export default {
     };
 
     return {
+      titleForm: {
+        edit: "提示",
+        add: "添加用户",
+        distribute: "分配角色",
+      },
       //获取用户的信息列表
       queryInfo: {
         query: "",
@@ -346,10 +338,12 @@ export default {
     },
     //监听添加用户对话框的关闭事件
     addDialogClosed() {
+      this.addVisible = false;
       this.$refs.addFormRef.resetFields();
     },
     //监听修改用户对话框的关闭事件
     editDialogClosed() {
+      this.editDialogVisible = false;
       this.$refs.editFormRef.resetFields();
     },
     //点击按钮添加新用户
@@ -363,6 +357,7 @@ export default {
         this.$message.success("添加用户成功!");
         //隐藏添加用户的对话框
         this.addVisible = false;
+        this.$refs.addFormRef.resetFields();
         //重新加载用户列表
         this.userList();
       });
@@ -428,16 +423,19 @@ export default {
         `users/${this.userInfo.id}/role`,
         { rid: this.selectedRoleId }
       );
-      if (res.meta.status !== 200)
+      if (res.meta.status !== 200) {
         return this.$message.error("更新用户角色失败!");
+      }
+      console.log(res);
       this.$message.success("更新用户角色成功!");
       this.userList();
+      this.selectedRoleId = "";
       this.RoleDialogVisible = false;
     },
     //分配角色对话框关闭后重置
     RoleDialogClosed() {
       this.selectedRoleId = "";
-      this.userInfo = "";
+      this.RoleDialogVisible = false;
     },
   },
 };

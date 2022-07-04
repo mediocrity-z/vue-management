@@ -129,6 +129,9 @@ export default {
     background-color: #333744;
     height: 100%;
   }
+  .el-main {
+    background-color: #eaedf1;
+  }
 }
 //组件名本身当成一个类选择器使用
 .el-header {
@@ -142,12 +145,8 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
-  z-index: 99999;
 }
 
-.el-main {
-  background-color: #eaedf1;
-}
 .toggle-button {
   background-color: #4a5064;
   font-size: 10px;
